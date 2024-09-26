@@ -33,7 +33,7 @@ always {
   archiveArtifacts artifacts: '**/dist/**', allowEmptyArchive: true
 }
 success {
-  echo 'Pipeline completed successfully!'
+  echo 'Pipeline completed successfully!!!'
 
 }
 failure{
