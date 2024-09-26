@@ -26,4 +26,10 @@ pipeline {
     }
   }
 }
+post {
+  always{
+    archiveArtifacts artifacts: 'build/libs/**/*.jar',
+    junit 'build/reports/**/*.xml'
+  }
+}
 }
