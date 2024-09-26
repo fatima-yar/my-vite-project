@@ -28,8 +28,9 @@ pipeline {
 }
 post {
   success{
+    
     echo 'Build Successful!'
-    archiveArtifacts artifacts: 'build/libs/**/*.jar',
+    rchiveArtifacts artifacts: 'dist/**/*'
     
   }
   failure{
