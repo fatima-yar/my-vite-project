@@ -27,9 +27,13 @@ pipeline {
   }
 }
 post {
-  always{
+  success{
+    echo 'Build Successful!'
     archiveArtifacts artifacts: 'build/libs/**/*.jar',
-    junit 'build/reports/**/*.xml'
+    
+  }
+  failure{
+    echo 'Build failed.'
   }
 }
 }
