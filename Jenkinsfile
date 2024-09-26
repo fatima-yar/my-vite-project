@@ -30,7 +30,7 @@ post {
   success{
     
     echo 'Build Successful!'
-    rchiveArtifacts artifacts: 'dist/**/*'
+    archiveArtifacts artifacts: 'dist/**/*'
     
   }
   failure{
