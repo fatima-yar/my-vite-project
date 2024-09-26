@@ -3,11 +3,20 @@ pipeline {
   agent any
 
   stages{
-    stage('Build'){
+    stage('install Dependencies'){
       steps{
-        sh 'npm install'
+        script{
+         sh 'npm install'
+      }
+    }
+    
+  }
+  stage('run test'){
+    steps{
+      script{
         sh 'npm test'
       }
     }
   }
+}
 }
