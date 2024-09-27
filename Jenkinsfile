@@ -32,25 +32,17 @@ post {
     echo 'Build Successful!'
     archiveArtifacts artifacts: 'dist/**/*'
     //Upload to Dropbox
-    script {
-      def dropboxAccessToken = credentials('DROPBOX_ACCESS_TOKEN')  // For Jenkins credentials
-
-      def filePath= 'dist/*'
-       // Get the list of files to upload
-       def files = sh(script:"ls ${filePath}", returnStdout:true).trim().split('\n')
-       for (file in files){
-        echo "Uploading ${file} to Dropbox"
-        sh """
-             curl -X POST https://content.dropboxapi.com/2/files/upload \
-                        --header 'Authorization: Bearer ${dropboxAccessToken}' \
-                        --header 'Dropbox-API-Arg: {\"path\": \"/${file}\",\"mode\": \"add\",\"autorename\": true}' \
-                        --header 'Content-Type: application/octet-stream' \
-                        --data-binary @${file}
-                    """
-       }
+ script {
+        def dropboxUploadCmd = """
+        curl -X POST https://content.dropboxapi.com/2/files/upload \
+        --header "Authorization: Bearer ${env.DROPBOX_ACCESS_TOKEN}" \
+        --header "Dropbox-API-Arg: {\"path\": \"/your-folder/your-artifact.zip\", \"mode\": \"add\", \"autorename\": true, \"mute\": false}" \
+        --header "Content-Type: application/octet-stream" \
+        --data-binary @dist/your-artifact.zip
+        """
+        bat dropboxUploadCmd
+      }
     }
-    
-  }
   failure{
     echo 'Build failed.'
   }
