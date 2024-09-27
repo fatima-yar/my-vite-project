@@ -26,27 +26,28 @@ pipeline {
     }
   }
 }
- post {
-    success {
-      echo 'Build Successful!'
-      
-      // Archive the built artifacts
-      archiveArtifacts artifacts: 'dist/**/*'
+post {
+        success {
+            echo 'Build Successful!'
 
-      // Upload to Dropbox
-      withCredentials([string(credentialsId: 'DROPBOX_ACCESS_TOKEN', variable: 'DROPBOX_ACCESS_TOKEN')]) {
-        sh """
-        curl -X POST https://content.dropboxapi.com/2/files/upload \
-        --header "Authorization: Bearer ${DROPBOX_ACCESS_TOKEN}" \
-        --header "Dropbox-API-Arg: {\\"path\\": \\"/your-folder/your-artifact.zip\\", \\"mode\\": \\"add\\", \\"autorename\\": true, \\"mute\\": false}" \
-        --header "Content-Type: application/octet-stream" \
-        --data-binary @dist/your-artifact.zip
-        """
-      }
-    }
+            // Archive the built artifacts
+            archiveArtifacts artifacts: 'dist/**/*'
 
-    failure {
-      echo 'Build failed.'
+            // Upload to Dropbox
+            withCredentials([string(credentialsId: 'DROPBOX_ACCESS_TOKEN', variable: 'DROPBOX_ACCESS_TOKEN')]) {
+                // Use PowerShell to perform the curl command if on Windows
+                bat """
+                curl -X POST https://content.dropboxapi.com/2/files/upload ^
+                --header "Authorization: Bearer %DROPBOX_ACCESS_TOKEN%" ^
+                --header "Dropbox-API-Arg: {\"path\": \"/your-folder/your-artifact.zip\", \"mode\": \"add\", \"autorename\": true, \"mute\": false}" ^
+                --header "Content-Type: application/octet-stream" ^
+                --data-binary @dist/your-artifact.zip
+                """
+            }
+        }
+
+        failure {
+            echo 'Build failed.'
+        }
     }
-  }
 }
