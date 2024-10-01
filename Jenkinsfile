@@ -26,24 +26,16 @@ pipeline {
     }
   }
 }
-  stage('Post Actions') {
-            steps {
-                script {
-                    // On success
-                    bat """
-                        psql -h localhost -U postgres -d postgres -c "INSERT INTO build_results (build_number, status) VALUES (${env.BUILD_NUMBER}, 'SUCCESS');"
-                    """
-                }
-            }
-            post {
-                failure {
-                    script {
-                        // On failure
-                        bat """
-                            psql -h localhost -U postgres -d postgres -c "INSERT INTO build_results (build_number, status) VALUES (${env.BUILD_NUMBER}, 'FAILURE');"
-                        """
-                    }
-                }
-            }
+post {
+        success {
+            echo 'Build Successful!'
+            
+            // Archive the built artifacts
+            archiveArtifacts artifacts: 'dist/**/*'
+        }
+
+        failure {
+            echo 'Build failed.'
         }
     }
+}
