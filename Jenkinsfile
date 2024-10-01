@@ -1,32 +1,29 @@
-
 pipeline {
-  agent any
+    agent any
 
-  stages{
-    stage('install Dependencies'){
-      steps{
-        script{
-         bat 'npm install'
-      }
-    }
-    
-  }
-  stage('run test'){
-    steps{
-      script{
-        bat 'npm test'
-      }
-    }
-  }
-  stage('Build'){
-    steps{
-      script{
-        bat 'npm run build'
-      }
-    }
-  }
-}
-stage('Add Artifact to Database') {
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    bat 'npm install'
+                }
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                script {
+                    bat 'npm test'
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                script {
+                    bat 'npm run build'
+                }
+            }
+        }
+        stage('Add Artifact to Database') {
             steps {
                 script {
                     // Ensure you have psql in your PATH or specify the full path
@@ -36,13 +33,18 @@ stage('Add Artifact to Database') {
                 }
             }
         }
-    
-post {
+        stage('Archive Artifacts') {
+            steps {
+                script {
+                    archiveArtifacts artifacts: 'dist/**/*'
+                }
+            }
+        }
+    }
+
+    post {
         success {
             echo 'Build Successful!'
-            
-            // Archive the built artifacts
-            archiveArtifacts artifacts: 'dist/**/*'
         }
 
         failure {
