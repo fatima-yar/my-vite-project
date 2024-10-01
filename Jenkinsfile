@@ -26,31 +26,24 @@ pipeline {
     }
   }
 }
-post {
-    success {
-      script {
-        echo 'Build Successful!'
-        // Archive 
-        archiveArtifacts artifacts: 'dist/**/*'
-        // result into PostgreSQL
-        withCredentials([string(credentialsId: 'postgres_password', variable: 'PGPASSWORD')]) {
-          bat '''
-          psql -h localhost -U postgres -d postgres -c "INSERT INTO build_results (build_number, status) VALUES ($BUILD_NUMBER, 'SUCCESS');"
-          '''
+  stage('Post Actions') {
+            steps {
+                script {
+                    // On success
+                    bat """
+                        psql -h localhost -U postgres -d postgres -c "INSERT INTO build_results (build_number, status) VALUES (${env.BUILD_NUMBER}, 'SUCCESS');"
+                    """
+                }
+            }
+            post {
+                failure {
+                    script {
+                        // On failure
+                        bat """
+                            psql -h localhost -U postgres -d postgres -c "INSERT INTO build_results (build_number, status) VALUES (${env.BUILD_NUMBER}, 'FAILURE');"
+                        """
+                    }
+                }
+            }
         }
-      }
     }
-
-    failure {
-      script {
-        echo 'Build failed.'
-        // failure result into PostgreSQL
-        withCredentials([string(credentialsId: 'postgres_password', variable: 'PGPASSWORD')]) {
-          bat '''
-          psql -h localhost -U postgres -d postgres -c "INSERT INTO build_results (build_number, status) VALUES ($BUILD_NUMBER, 'FAILURE');"
-          '''
-        }
-      }
-    }
-  }
-}
