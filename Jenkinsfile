@@ -32,6 +32,10 @@ post {
             
             // Archive the built artifacts
             archiveArtifacts artifacts: 'dist/**/*'
+                 // Insert success result into PostgreSQL
+        bat '''
+        psql -h localhost -U postgres -d postgres -c "INSERT INTO build_results (build_number, status) VALUES ($BUILD_NUMBER, 'SUCCESS');"
+        '''
         }
 
         failure {
