@@ -29,7 +29,7 @@ pipeline {
             withCredentials([string(credentialsId: 'postgres_password', variable: 'PGPASSWORD')]) {
                 // Check if the artifacts table exists
                 bat '''
-                    psql -h localhost -U postgres -d postgres -c "\dt"
+                    psql -h localhost -U postgres -d postgres -c "\\dt"
                 '''
                 
                 // List the files in the dist directory
@@ -43,6 +43,7 @@ pipeline {
         }
     }
 }
+
         stage('Archive Artifacts') {
             steps {
                 script {
