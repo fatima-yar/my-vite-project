@@ -38,8 +38,14 @@ post {
         '''
         }
 
-        failure {
-            echo 'Build failed.'
-        }
+         failure {
+      script {
+        echo 'Build failed.'
+        // Insert failure result into PostgreSQL
+        bat '''
+        psql -h localhost -U postgres -d postgres -c "INSERT INTO build_results (build_number, status) VALUES ($BUILD_NUMBER, 'FAILURE');"
+        '''
+      }
     }
+  }
 }
