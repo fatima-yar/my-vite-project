@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    environment {
+        DB_URL = 'jdbc:postgresql://localhost:5432/postgres'
+        DB_USER = 'postgres'
+        DB_PASSWORD = '1234'
+    }
+
     stages {
         stage('Install Dependencies') {
             steps {
@@ -23,8 +29,6 @@ pipeline {
                 }
             }
         }
-
-
         stage('Archive Artifacts') {
             steps {
                 script {
@@ -32,23 +36,16 @@ pipeline {
                 }
             }
         }
-        stage('Save to Database'){
-          steps {
-            script {
-              def dbHost="localhost"
-              def dbPost="5432" 
-               def dbName = "postgres"
-                    def dbUser = "postgres"
-                    def dbPassword = "1234"
-                    def buildId = "1"
-                    def buildName = "Test"
-                    def buildPath = "/dist"
-                    // Save to the PostgreSQL table
+
+        stage('Save to Database') {
+            steps {
+                script {
+                    // Insert into PostgreSQL database
                     bat """
-                        psql -h ${dbHost} -p ${dbPort} -U ${dbUser} -d ${dbName} -c "INSERT INTO your_table_name (id, name, path) VALUES (${buildId}, '${buildName}', '${buildPath}');"
+                        psql -h localhost -p 5432 -U postgres -d postgres -c "INSERT INTO your_table_name (id, name, path) VALUES (1, 'Test', '\\\\wsl.localhost\\Ubuntu\\home\\fatima\\workspace\\my-vite-project\\dist');"
                     """
+                }
             }
-          }
         }
     }
 
