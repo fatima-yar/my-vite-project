@@ -45,7 +45,9 @@ pipeline {
                 script {
                     // Use psql to insert the data
                     def insertCommand = """
-                        PGPASSWORD=${DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts (id, name, path) VALUES (2, 'test2', 'c:/save2');"
+                          @echo off
+                        set PGPASSWORD=${DB_PASSWORD} 
+                        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts (id, name, path) VALUES (2, 'test2', 'c:/save2');"
                     """
                     bat insertCommand
                 }
