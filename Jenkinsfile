@@ -67,8 +67,9 @@ pipeline {
                         """
                         sh insertCommand
                     }
-            }
+                  }
         }
+    }
     }
 
     post {
