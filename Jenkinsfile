@@ -47,7 +47,7 @@ pipeline {
                     def insertCommand = """
                          
                         set PGPASSWORD=${DB_PASSWORD} 
-                        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts ( name, path) VALUES ( 'test6', 'c:/66');"
+                        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts ( name, path) VALUES ( 'test4', 'c:/44');"
                     """
                     bat insertCommand
                 }
