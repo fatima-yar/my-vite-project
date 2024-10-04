@@ -42,7 +42,7 @@ pipeline {
                     def dbPassword = "1234"
                     def buildId = "1"
                     def buildName = "Test"
-                    def buildPath = "\dist"
+                    def buildPath = "/dist"
                     // Save to the PostgreSQL table
                     bat """
                         psql -h ${dbHost} -p ${dbPort} -U ${dbUser} -d ${dbName} -c "INSERT INTO your_table_name (id, name, path) VALUES (${buildId}, '${buildName}', '${buildPath}');"
