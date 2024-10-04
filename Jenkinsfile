@@ -47,10 +47,26 @@ pipeline {
                     def insertCommand = """
                          
                         set PGPASSWORD=${DB_PASSWORD} 
-                        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts (id, name, path) VALUES (4, 'test4', 'c:/43');"
+                        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts ( name, path) VALUES ( 'test5', 'c:/55');"
                     """
                     bat insertCommand
                 }
+                script {
+                    // Get list of artifacts
+                    def artifacts = findFiles(glob: 'dist/**/*') 
+
+                    // Loop through each artifact and insert into PostgreSQL
+                    artifacts.each { artifact ->
+                        def artifactName = artifact.name
+                        def artifactPath = artifact.path
+
+                        // Use psql to insert the data
+                        def insertCommand = """
+                            set PGPASSWORD=${DB_PASSWORD}
+                            psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts (name, path) VALUES ('${artifactName}', '${artifactPath}');"
+                        """
+                        sh insertCommand
+                    }
             }
         }
     }
