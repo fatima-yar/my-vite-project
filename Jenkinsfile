@@ -65,7 +65,7 @@ pipeline {
                             set PGPASSWORD=${DB_PASSWORD}
                             psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts (name, path) VALUES ('${artifactName}', '${artifactPath}');"
                         """
-                        sh insertCommand
+                        bat insertCommand
                     }
                   }
         }
