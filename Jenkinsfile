@@ -3,7 +3,7 @@ pipeline {
         environment {
         
         DB_USER = 'postgres'
-        DB_PASSWORD = '1234'
+        DB_PASSWORD = credentials('postgres-password')
         DB_NAME = 'postgres'  
         DB_HOST = 'localhost' 
         DB_PORT = '5432'  
