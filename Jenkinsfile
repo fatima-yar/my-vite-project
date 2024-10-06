@@ -73,7 +73,7 @@ pipeline {
 stage('Upload to Dropbox') {
     steps {
         script {
-            publishOverDropbox([
+            publish-over-dropbox([
                 credentialsId: 'dropbox-access-token',
                 files: 'dist/**/*', 
                 remoteDirectory: 'Jenkins-artifacts/Upload'
