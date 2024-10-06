@@ -70,7 +70,7 @@ pipeline {
                   }
         }
     }
-  stage('Upload to Dropbox') {
+stage('Upload to Dropbox') {
     steps {
         script {
             publishOverDropbox([
@@ -81,6 +81,7 @@ pipeline {
         }
     }
 }
+    }
 
     post {
         success {
