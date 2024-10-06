@@ -70,14 +70,35 @@ pipeline {
                   }
         }
     }
+// stage('Upload to Dropbox') {
+//     steps {
+//         script {
+//             publish-over-dropbox([
+//                 credentialsId: 'dropbox-access-token',
+//                 files: 'dist/**/*', 
+//                 remoteDirectory: 'Jenkins-artifacts/Upload'
+//             ])
+//         }
+//     }
+// }
 stage('Upload to Dropbox') {
     steps {
         script {
-            publish-over-dropbox([
-                credentialsId: 'dropbox-access-token',
-                files: 'dist/**/*', 
-                remoteDirectory: 'Jenkins-artifacts/Upload'
-            ])
+            def dropboxToken = credentials('dropbox-access-token')
+            def filesToUpload = findFiles(glob: 'dist/**/*')
+
+            filesToUpload.each { file ->
+                def filePath = file.path
+                def dropboxPath = "/Jenkins-artifacts/Upload/${file.name}"
+                def curlCommand = """
+                    curl -X POST https://content.dropboxapi.com/2/files/upload \
+                    --header "Authorization: Bearer ${dropboxToken}" \
+                    --header "Dropbox-API-Arg: {\\"path\\":\\"${dropboxPath}\\", \\"mode\\":\\"add\\", \\"autorename\\":true, \\"mute\\":false}" \
+                    --header "Content-Type: application/octet-stream" \
+                    --data-binary @${filePath}
+                """
+                bat curlCommand
+            }
         }
     }
 }
