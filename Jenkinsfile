@@ -71,18 +71,16 @@ pipeline {
         }
     }
   stage('Upload to Dropbox') {
-            steps {
-                script {
-                    //Publish Over Dropbox plugin
-                    publishOverDropbox([
-                        credentialsId: 'dropbox-access-token', 
-                        files: 'dist/**/*', // Path to artifacts
-                        remoteDirectory: 'Jenkins-artifacts/Upload' // Specify the remote directory in Dropbox
-                    ])
-                }
-            }
+    steps {
+        script {
+            publishOverDropbox([
+                credentialsId: 'dropbox-access-token',
+                files: 'dist/**/*', 
+                remoteDirectory: 'Jenkins-artifacts/Upload'
+            ])
         }
     }
+}
 
     post {
         success {
