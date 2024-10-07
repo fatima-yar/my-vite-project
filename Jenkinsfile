@@ -58,7 +58,7 @@ pipeline {
                     // Loop through each artifact and insert into PostgreSQL
                     artifacts.each { artifact ->
                         def artifactName = artifact.name
-                        def artifactPath = artifact.path
+                        def artifactPath = artifact.date
 
                         // Use psql to insert the data
                         def insertCommand = """
