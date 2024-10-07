@@ -59,7 +59,8 @@ pipeline {
                     artifacts.each { artifact ->
                         def artifactName = artifact.name
                         def artifactPath = artifact.date
-                        def artifactDate = new Date()
+                        def artifactDate = new Date().format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+                    
 
                         // Use psql to insert the data
                         def insertCommand = """
