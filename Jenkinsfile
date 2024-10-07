@@ -52,22 +52,22 @@ pipeline {
                     bat insertCommand
                 }
                 script {
-                    // Get list of artifacts
-                    def artifacts = findFiles(glob: 'dist/**/*') 
+    // Get list of artifacts
+    def artifacts = findFiles(glob: 'dist/**/*')
 
-                    // Loop through each artifact and insert into PostgreSQL
-                    artifacts.each { artifact ->
-                        def artifactName = artifact.name
-                        def artifactPath = artifact.date
-                        def artifactDate =new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone('UTC'))
-                    
+    // Loop through each artifact and insert into PostgreSQL
+    artifacts.each { artifact ->
+        def artifactName = artifact.name
+        def artifactPath = artifact.path  // Use 'artifact.path' to get the file path
+        def artifactDate = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone('UTC'))
 
-                        // Use psql to insert the data
-                        def insertCommand = """
-                            set PGPASSWORD=${DB_PASSWORD}
-                            psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts (name, path, created_at) VALUES ('${artifactName}', '${artifactPath}', '${artifactDate}');"
-                        """
-                        bat insertCommand
+        // Use psql to insert the data
+        def insertCommand = """
+            set PGPASSWORD=${DB_PASSWORD}
+            psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts (name, path, created_at) VALUES ('${artifactName}', '${artifactPath}', '${artifactDate}');"
+        """
+        // Execute the insert command
+        bat insertCommand
                     }
                   }
         }
