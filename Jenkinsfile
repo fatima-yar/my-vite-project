@@ -47,7 +47,7 @@ pipeline {
                     def insertCommand = """
                          
                         set PGPASSWORD=${DB_PASSWORD} 
-                        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts ( name, path,created_at) VALUES ( 'test3', 'c:/33','2024-10-08 12:24');"
+                        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts ( name, path,created_at) VALUES ( 'test3', 'c:/33','2024-10-08 12:26:12');"
                     """
                     bat insertCommand
                 }
@@ -59,7 +59,7 @@ pipeline {
                     artifacts.each { artifact ->
                         def artifactName = artifact.name
                         def artifactPath = artifact.date
-                        def artifactDate = new Date().format('yyyy-mm-dd HH:mm')
+                        def artifactDate = new Date().format('yyyy-mm-dd HH:mm:ss')
 
                         // Use psql to insert the data
                         def insertCommand = """
