@@ -32,7 +32,7 @@ pipeline {
             }
         }
 
-        stage('Encoding text and send to pg'){
+        stage('Encoding texts and send to pg'){
           steps {
             script {
             def files = findFiles(glob: 'public/**/*')
