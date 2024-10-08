@@ -32,46 +32,76 @@ pipeline {
             }
         }
 
+        stage('Encoding text'){
+          steps {
+            script {
+            
+              def fileName= 'dist/myText.txt'
+              def fileContent = readFile(fileName)
 
-        stage('Archive Artifacts') {
-            steps {
-                script {
-                    archiveArtifacts artifacts: 'dist/**/*'
-                }
+              // Encode the content in Base64
+              def encodedContent = "${fileContent.bytes.encodeBase64()}"
+
+               // Store the encoded content in an environment variable for later use
+               env.ENCODED_CONTENT = encodedContent
+
             }
+          }
         }
-         stage('Insert Data into PostgreSQL') {
-            steps {
-                script {
-                    // Use psql to insert the data
-                    def insertCommand = """
+        stage ('Insert to Postgres'){
+          steps {
+            script {
+               // Use psql to insert the encoded data
+               def insertCommand = """
+                  set PGPASSWORD=${DB_PASSWORD}
+                  psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('fileName' , ${env.ENCODED_CONTENT})"
+
+               """
+               bat insertCommand
+            }
+          }
+        }
+   
+
+    //     stage('Archive Artifacts') {
+    //         steps {
+    //             script {
+    //                 archiveArtifacts artifacts: 'dist/**/*'
+    //             }
+    //         }
+    //     }
+    //      stage('Insert Data into PostgreSQL') {
+    //         steps {
+    //             script {
+    //                 // Use psql to insert the data
+    //                 def insertCommand = """
                          
-                        set PGPASSWORD=${DB_PASSWORD} 
-                        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts ( name, path,created_at) VALUES ( 'test1', 'path-to-artifact1','2024-10-09');"
-                    """
-                    bat insertCommand
-                }
-                script {
-    // Get list of artifacts
-    def artifacts = findFiles(glob: 'dist/**/*')
+    //                     set PGPASSWORD=${DB_PASSWORD} 
+    //                     psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts ( name, path,created_at) VALUES ( 'test1', 'path-to-artifact1','2024-10-09');"
+    //                 """
+    //                 bat insertCommand
+    //             }
+    //             script {
+    // // Get list of artifacts
+    // def artifacts = findFiles(glob: 'dist/**/*')
 
-    // Loop through each artifact and insert into PostgreSQL
-    artifacts.each { artifact ->
-        def artifactName = artifact.name
-        def artifactPath = artifact.path 
-        def artifactDate = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone('UTC'))
+    // // Loop through each artifact and insert into PostgreSQL
+    // artifacts.each { artifact ->
+    //     def artifactName = artifact.name
+    //     def artifactPath = artifact.path 
+    //     def artifactDate = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone('UTC'))
 
-        // Use psql to insert the data
-        def insertCommand = """
-            set PGPASSWORD=${DB_PASSWORD}
-            psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts (name, path, created_at) VALUES ('${artifactName}', '${artifactPath}', '${artifactDate}');"
-        """
-        // Execute the insert command
-        bat insertCommand
-                    }
-                  }
-        }
-    }
+    //     // Use psql to insert the data
+    //     def insertCommand = """
+    //         set PGPASSWORD=${DB_PASSWORD}
+    //         psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts (name, path, created_at) VALUES ('${artifactName}', '${artifactPath}', '${artifactDate}');"
+    //     """
+    //     // Execute the insert command
+    //     bat insertCommand
+    //                 }
+    //               }
+    //     }
+    // }
 
     }
 
