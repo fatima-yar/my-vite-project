@@ -36,9 +36,9 @@ pipeline {
           steps {
             script {
             
-    // // Loop through each artifact and insert into PostgreSQL
-   artifacts.each { artifact ->
-              def fileName= 'public/**'
+    // // Loop through each 
+   files.each { file ->
+              def fileName= 'public/**/*'
               def fileContent = readFile(fileName)
 
               // Encode the content in Base64
