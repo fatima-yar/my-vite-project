@@ -40,7 +40,7 @@ pipeline {
               def fileContent = readFile(fileName)
 
               // Encode the content in Base64
-              def encodedContent = "${fileContent.bytes.encodeBase64()}"
+              def encodedContent = "${fileContent.bytes.encodeBase64().toString()}"
 
                // Store the encoded content in an environment variable for later use
                env.ENCODED_CONTENT = encodedContent
@@ -49,8 +49,8 @@ pipeline {
        
                // Use psql to insert the encoded data
                def insertCommand = """
-                  set PGPASSWORD=${DB_PASSWORD}}
-                      psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('hello', 'some data');"
+                  set PGPASSWORD=${DB_PASSWORD}
+                      psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
 
                """
                bat insertCommand
