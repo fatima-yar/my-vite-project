@@ -47,7 +47,7 @@ pipeline {
                     def insertCommand = """
                          
                         set PGPASSWORD=${DB_PASSWORD} 
-                        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts ( name, path,created_at) VALUES ( 'test3', 'c:/33','2024-10-08 12:26:12');"
+                        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts ( name, path,created_at) VALUES ( 'test3', 'user\artifact','2024-10-08 12:26:12');"
                     """
                     bat insertCommand
                 }
@@ -58,7 +58,7 @@ pipeline {
     // Loop through each artifact and insert into PostgreSQL
     artifacts.each { artifact ->
         def artifactName = artifact.name
-        def artifactPath = artifact.path  // Use 'artifact.path' to get the file path
+        def artifactPath = artifact.path 
         def artifactDate = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone('UTC'))
 
         // Use psql to insert the data
