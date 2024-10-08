@@ -36,7 +36,7 @@ pipeline {
           steps {
             script {
             
-              def fileName= 'dist/myText.txt'
+              def fileName= 'public/myText.txt'
               def fileContent = readFile(fileName)
 
               // Encode the content in Base64
