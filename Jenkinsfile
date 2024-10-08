@@ -35,19 +35,14 @@ pipeline {
         stage('Encoding text and send to pg'){
           steps {
             script {
-            
+            def files = findFiles(glob: 'public/**/*')
     // // Loop through each 
    files.each { file ->
-              def fileName= 'public/**/*'
-              def fileContent = readFile(fileName)
+              def fileName= file.name
+              def fileContent = readFile(file.path)
 
               // Encode the content in Base64
               def encodedContent = "${fileContent.bytes.encodeBase64().toString()}"
-
-               // Store the encoded content in an environment variable for later use
-               env.ENCODED_CONTENT = encodedContent
-
-       
        
                // Use psql to insert the encoded data
                def insertCommand = """
