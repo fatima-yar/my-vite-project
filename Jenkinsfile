@@ -53,8 +53,8 @@ pipeline {
             script {
                // Use psql to insert the encoded data
                def insertCommand = """
-                  set PGPASSWORD=${DB_PASSWORD}
-                  psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${env.ENCODED_CONTENT}');"
+                  set PGPASSWORD=${DB_PASSWORD}}
+                      psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${env.ENCODED_CONTENT}');"
 
                """
                bat insertCommand
