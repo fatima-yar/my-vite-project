@@ -45,16 +45,12 @@ pipeline {
                // Store the encoded content in an environment variable for later use
                env.ENCODED_CONTENT = encodedContent
 
-            }
-          }
-        }
-        stage ('Insert to Postgres'){
-          steps {
-            script {
+       
+       
                // Use psql to insert the encoded data
                def insertCommand = """
                   set PGPASSWORD=${DB_PASSWORD}}
-                      psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('test1', 'sombhgggfffffffffffffffffffffffffffffffffffffffffffffffgjhhhhhhhhhhhhhhhhhhhh66666666666666666666666666654444444444444444444444ccccccccccccccccccccccething');"
+                      psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', 'something');"
 
                """
                bat insertCommand
