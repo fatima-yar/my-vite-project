@@ -36,7 +36,9 @@ pipeline {
           steps {
             script {
             
-              def fileName= 'public/myText.txt'
+    // // Loop through each artifact and insert into PostgreSQL
+   artifacts.each { artifact ->
+              def fileName= 'public/**'
               def fileContent = readFile(fileName)
 
               // Encode the content in Base64
@@ -56,7 +58,7 @@ pipeline {
                bat insertCommand
             }
           }
-        }
+        }}
    
 
     //     stage('Archive Artifacts') {
