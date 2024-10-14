@@ -42,7 +42,7 @@ pipeline {
                         // Use psql to insert the encoded data
                         def insertCommand = """
                             set PGPASSWORD=${DB_PASSWORD};
-                             psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
+                            wsl psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
                         """
                         // Execute the insert command
                         bat insertCommand
