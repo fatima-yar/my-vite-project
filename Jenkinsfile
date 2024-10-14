@@ -4,7 +4,7 @@ pipeline {
         DB_USER = 'postgres'
         DB_PASSWORD = '1234'
         DB_NAME = 'postgres'
-        DB_HOST = 'localhost' 
+        DB_HOST = 'localhost'
         DB_PORT = '5432'
     }
 
@@ -39,24 +39,18 @@ pipeline {
                         def fileContent = readFile(file.path)
                         def encodedContent = "${fileContent.bytes.encodeBase64().toString()}"
 
-                        // Use psql to insert the encoded data
-                        // def insertCommand = """
-                            
-                        //     set PGPASSWORD=${DB_PASSWORD};
-
-                        //    psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
-                        // """
-def insertCommand = """
-    wsl bash -c '
-    PGPASSWORD=${DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
-    '
-"""
+                        // Construct the insert command for PostgreSQL
+                        def insertCommand = """
+                        PGPASSWORD=${DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
+                        """
                         // Execute the insert command
                         bat insertCommand
                     }
-          }
-        }}
-   
+                }
+            }
+        }
+    
+
 
     //     stage('Archive Artifacts') {
     //         steps {
