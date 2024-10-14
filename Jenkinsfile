@@ -2,7 +2,7 @@ pipeline {
     agent any
         environment {
         
-        DB_USER = 'postgres'
+        DB_USER = 'fatima'
         DB_PASSWORD = credentials('postgres_password')
         DB_NAME = 'postgres'  
         DB_HOST = 'localhost' 
