@@ -5,7 +5,7 @@ pipeline {
         DB_USER = 'fatima'
         DB_PASSWORD = credentials('postgres_password')
         DB_NAME = 'postgres'  
-        DB_HOST = 'localhost' 
+        DB_HOST = '172.19.34.170' 
         DB_PORT = '5432'  
     }
 
