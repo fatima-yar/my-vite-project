@@ -47,7 +47,7 @@ pipeline {
                         //    psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
                         // """
                         def insertCommand = """
-                       wsl psql -h localhost -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
+                       wsl bash -c 'PGPASSWORD=${DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES (\'${fileName}\', \'${encodedContent}\');"'
                                                 """
                         // Execute the insert command
                         bat insertCommand
