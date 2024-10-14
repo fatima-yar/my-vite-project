@@ -30,25 +30,26 @@ pipeline {
                 }
             }
         }
-       stage('Encoding texts and send to pg') {
-    steps {
-        script {
-            def files = findFiles(glob: 'public/**/*')
-            files.each { file ->
-                def fileName = file.name
-                def fileContent = readFile(file.path)
-                def encodedContent = "${fileContent.bytes.encodeBase64().toString()}"
+        stage('Encoding texts and send to pg') {
+            steps {
+                script {
+                    def files = findFiles(glob: 'public/**/*')
+                    files.each { file ->
+                        def fileName = file.name
+                        def fileContent = readFile(file.path)
+                        def encodedContent = "${fileContent.bytes.encodeBase64().toString()}"
 
-                // Call the batch file with filename and encoded content
-                def insertCommand = """
-                    call insert_into_pg.bat "${fileName}" "${encodedContent}"
-                """
-                bat insertCommand
-            }
-        }
-    }
-}
-
+                        // Use psql to insert the encoded data
+                        def insertCommand = """
+                            set PGPASSWORD=${DB_PASSWORD};
+                            wsl psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
+                        """
+                        // Execute the insert command
+                        bat insertCommand
+                    }
+          }
+        }}
+   
 
     //     stage('Archive Artifacts') {
     //         steps {
