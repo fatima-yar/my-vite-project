@@ -34,16 +34,18 @@ pipeline {
             steps {
                 script {
                     def files = findFiles(glob: 'public/**/*')
+                    //Loop through each 
                     files.each { file ->
                         def fileName = file.name
                         def fileContent = readFile(file.path)
+                        //Encode the content in Base64
                         def encodedContent = "${fileContent.bytes.encodeBase64().toString()}"
 
-                        // Construct the insert command for PostgreSQL
+                       
                         def insertCommand = """
-                        PGPASSWORD=${DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
+                        set PGPASSWORD=${DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
                         """
-                        // Execute the insert command
+                        
                         bat insertCommand
                     }
                 }
