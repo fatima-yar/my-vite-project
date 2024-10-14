@@ -1,12 +1,11 @@
 pipeline {
     agent any
-        environment {
-        
+    environment {
         DB_USER = 'fatima'
-        DB_PASSWORD = credentials('postgres_password')
-        DB_NAME = 'postgres'  
-        DB_HOST = '172.19.34.170' 
-        DB_PORT = '5432'  
+        DB_PASSWORD = '1234'
+        DB_NAME = 'postgres'
+        DB_HOST = '172.19.34.170' // Adjust if needed
+        DB_PORT = '5432'
     }
 
     stages {
@@ -31,27 +30,23 @@ pipeline {
                 }
             }
         }
+        stage('Encoding texts and send to pg') {
+            steps {
+                script {
+                    def files = findFiles(glob: 'public/**/*')
+                    files.each { file ->
+                        def fileName = file.name
+                        def fileContent = readFile(file.path)
+                        def encodedContent = "${fileContent.bytes.encodeBase64().toString()}"
 
-        stage('Encoding texts and send to pg'){
-          steps {
-            script {
-            def files = findFiles(glob: 'public/**/*')
-    // // Loop through each 
-   files.each { file ->
-              def fileName= file.name
-              def fileContent = readFile(file.path)
-
-              // Encode the content in Base64
-              def encodedContent = "${fileContent.bytes.encodeBase64().toString()}"
-       
-               // Use psql to insert the encoded data
-               def insertCommand = """
-                  set PGPASSWORD=${DB_PASSWORD}
-                      psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
-
-               """
-               bat insertCommand
-            }
+                        // Use psql to insert the encoded data
+                        def insertCommand = """
+                            set PGPASSWORD=${DB_PASSWORD};
+                            psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
+                        """
+                        // Execute the insert command
+                        bat insertCommand
+                    }
           }
         }}
    
