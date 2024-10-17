@@ -4,12 +4,12 @@ pipeline {
         DB_USER = 'postgres'
         DB_PASSWORD = '1234'
         DB_NAME = 'postgres'
-        DB_HOST = 'localhost' //'172.19.34.170' 
+        DB_HOST = 'localhost' // '172.19.34.170' 
         DB_PORT = '5432'
-    }    tools {
+    }
+    tools {
         nodejs 'nodejs' // Replace with your actual Node.js installation name
     }
-
 
     stages {
       stage('Check Node Version'){
@@ -42,7 +42,7 @@ pipeline {
                     sh 'npm test'
                 }
             }
-        }ga
+        }
         stage('Build') {
             steps {
                 script {
