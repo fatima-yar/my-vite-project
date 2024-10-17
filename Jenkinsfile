@@ -52,9 +52,10 @@ pipeline {
                     // Loop through each file
                     files.each { file ->
                         def fileName = file.name
-                        def fileContent = readFile(file.path)
+                        def fileContent = new File(file.path).text
                         // Encode the content in Base64
-                        def encodedContent =  sh(script: "base64 ${fileContent}", returnStdout: true).trim()
+                      def encodedContent = sh(script: "echo '${fileContent}' | base64", returnStdout: true).trim()
+
 
                         def insertCommand = """
                         set PGPASSWORD=${DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
