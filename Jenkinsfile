@@ -4,7 +4,7 @@ pipeline {
         DB_USER = 'postgres'
         DB_PASSWORD = '1234'
         DB_NAME = 'postgres'
-        DB_HOST = '172.19.34.170' 
+        DB_HOST = 'localhost' //'172.19.34.170' 
         DB_PORT = '5432'
     }
 
@@ -42,10 +42,10 @@ pipeline {
                         def encodedContent = "${fileContent.bytes.encodeBase64().toString()}"
 
                        
-def insertCommand = """
-set PGPASSWORD=${DB_PASSWORD} && psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
-"""
-                        
+                        def insertCommand = """
+                        set PGPASSWORD=${DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
+                        """
+                        // Execute the insert command
                         bat insertCommand
                     }
                 }
