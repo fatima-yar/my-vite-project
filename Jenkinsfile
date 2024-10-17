@@ -6,7 +6,18 @@ pipeline {
         DB_NAME = 'postgres'
         DB_HOST = 'localhost' //'172.19.34.170' 
         DB_PORT = '5432'
+    }    tools {
+        nodejs 'nodejs' // Replace with your actual Node.js installation name
     }
+      stages {
+        stage('Check Node Version') {
+            steps {
+                script {
+                    sh 'node -v'
+                    sh 'npm -v'
+                }
+            }
+        }
 
     stages {
         stage('Install Dependencies') {
