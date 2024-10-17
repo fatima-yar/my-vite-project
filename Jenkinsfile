@@ -47,21 +47,21 @@ pipeline {
 
         stage('Encoding texts and send to pg') {
             steps {
-                script {
-                    def files = findFiles(glob: 'public/**/*')
-                    // Loop through each file
-                    files.each { file ->
-                        def fileName = file.name
-                        def fileContent = new File(file.path).text
-                        // Encode the content in Base64
-                      def encodedContent = sh(script: "echo '${fileContent}' | base64", returnStdout: true).trim()
+           def files = findFiles(glob: 'public/**/*')
+            // Loop through each file
+            files.each { file ->
+                def fileName = file.name
+                // Use shell command to read file content
+                def fileContent = sh(script: "cat ${file.path}", returnStdout: true).trim()
+                
+                // Encode the content in Base64
+                def encodedContent = sh(script: "echo '${fileContent}' | base64", returnStdout: true).trim()
 
-
-                        def insertCommand = """
-                        set PGPASSWORD=${DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
-                        """
-                        // Execute the insert command
-                        sh insertCommand
+                def insertCommand = """
+                set PGPASSWORD=${DB_PASSWORD}; psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
+                """
+                // Execute the insert command
+                sh insertCommand
                     }
                 }
             }
