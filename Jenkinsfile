@@ -47,6 +47,7 @@ pipeline {
 
         stage('Encoding texts and send to pg') {
             steps {
+                script {
            def files = findFiles(glob: 'public/**/*')
             // Loop through each file
             files.each { file ->
