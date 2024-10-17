@@ -12,21 +12,21 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    bat 'npm install'
+                    sh 'npm install'
                 }
             }
         }
         stage('Run Tests') {
             steps {
                 script {
-                    bat 'npm test'
+                    sh 'npm test'
                 }
             }
         }
         stage('Build') {
             steps {
                 script {
-                    bat 'npm run build'
+                    sh 'npm run build'
                 }
             }
         }
@@ -46,7 +46,7 @@ pipeline {
                         set PGPASSWORD=${DB_PASSWORD} psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO textfile (filename, content) VALUES ('${fileName}', '${encodedContent}');"
                         """
                         // Execute the insert command
-                        bat insertCommand
+                        sh insertCommand
                     }
                 }
             }
@@ -70,7 +70,7 @@ pipeline {
     //                     set PGPASSWORD=${DB_PASSWORD} 
     //                     psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts ( name, path,created_at) VALUES ( 'test1', 'path-to-artifact1','2024-10-09');"
     //                 """
-    //                 bat insertCommand
+    //                 sh insertCommand
     //             }
     //             script {
     // // Get list of artifacts
@@ -88,7 +88,7 @@ pipeline {
     //         psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -c "INSERT INTO artifacts (name, path, created_at) VALUES ('${artifactName}', '${artifactPath}', '${artifactDate}');"
     //     """
     //     // Execute the insert command
-    //     bat insertCommand
+    //     sh insertCommand
     //                 }
     //               }
     //     }
