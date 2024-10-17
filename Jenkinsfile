@@ -8,9 +8,10 @@ pipeline {
         DB_PORT = '5432'
     }    tools {
         nodejs 'nodejs' // Replace with your actual Node.js installation name
-    }
-      stages {
-        stage('Check Node Version') {
+}
+
+    stages {
+              stage('Check Node Version') {
             steps {
                 script {
                     sh 'node -v'
@@ -19,7 +20,6 @@ pipeline {
             }
         }
 
-    stages {
         stage('Install Dependencies') {
             steps {
                 script {
@@ -33,7 +33,7 @@ pipeline {
                     sh 'npm test'
                 }
             }
-        }
+        }ga
         stage('Build') {
             steps {
                 script {
